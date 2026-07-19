@@ -406,7 +406,7 @@
     </g>
 
     <circle cx="170" cy="170" r="26" fill="#120A18" stroke="#E6C55C" stroke-width="2.5"/>
-    <text x="170" y="177" text-anchor="middle" font-family="Cinzel Decorative, serif" font-size="14" fill="#E6C55C">WoM</text>
+    <text x="170" y="177" text-anchor="middle" font-family="Cinzel Decorative, serif" font-size="14" fill="#E6C55C">OW</text>
   </g>
   <path d="M170 4 L182 26 L158 26 Z" fill="#E6C55C"/>
 </svg>
@@ -627,7 +627,7 @@
     function applyMomentum(){
       let v = velocity;
       function step(){
-        v *= 0.95; // friction
+        v *= 0.99; // friction
         currentRotation += v * 16;
         wheel.style.transform = `rotate(${currentRotation}deg)`;
         if(Math.abs(v) > 0.006){
