@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commander on Wheels: A Format Remix</title>
+<title>On Wheels: A Commander Format Remix</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cinzel+Decorative:wght@700;900&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -351,7 +351,7 @@
 
 <header class="top">
   <div class="nav-inner">
-    <a class="brand" href="#top">Commander on Wheels</a>
+    <a class="brand" href="#top">On Wheels</a>
     <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
     <ul class="nav-links" id="navLinks">
       <li><a href="#rules">The Rules</a></li>
@@ -376,28 +376,36 @@
   </div>
 
   <div class="wheel-wrap">
-    <svg class="wheel-svg" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="170" cy="170" r="164" fill="none" stroke="#C9A227" stroke-width="2" opacity="0.5"/>
-      <g class="wheel-spin">
-        <circle cx="170" cy="170" r="150" fill="#241729" stroke="#C9A227" stroke-width="3"/>
-        <g stroke="#C9A227" stroke-width="1.5" opacity="0.85">
-          <line x1="170" y1="20" x2="170" y2="320"/>
-          <line x1="20" y1="170" x2="320" y2="170"/>
-          <line x1="61" y1="61" x2="279" y2="279"/>
-          <line x1="279" y1="61" x2="61" y2="279"/>
-          <line x1="170" y1="20" x2="279" y2="279"/>
-          <line x1="170" y1="20" x2="61" y2="279"/>
-          <line x1="20" y1="170" x2="279" y2="61"/>
-          <line x1="20" y1="170" x2="279" y2="279"/>
-        </g>
-        <path d="M170 20 A150 150 0 0 1 279 61 L170 170 Z" fill="#7A2331" opacity="0.55"/>
-        <path d="M279 279 A150 150 0 0 1 170 320 L170 170 Z" fill="#7A2331" opacity="0.55"/>
-        <path d="M61 279 A150 150 0 0 1 20 170 L170 170 Z" fill="#7A2331" opacity="0.35"/>
-        <circle cx="170" cy="170" r="26" fill="#120A18" stroke="#E6C55C" stroke-width="2.5"/>
-        <text x="170" y="177" text-anchor="middle" font-family="Cinzel Decorative, serif" font-size="14" fill="#E6C55C">WoM</text>
-      </g>
-      <path d="M170 4 L182 26 L158 26 Z" fill="#E6C55C"/>
-    </svg>
+<svg class="wheel-svg" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="170" cy="170" r="164" fill="none" stroke="#C9A227" stroke-width="2" opacity="0.5"/>
+  <g class="wheel-spin" id="wheelSpin">
+    <circle cx="170" cy="170" r="150" fill="#241729" stroke="#C9A227" stroke-width="3"/>
+
+    <path d="M170,170 L170,20 A150,150 0 0,1 276.07,63.93 Z" fill="#7A2331" opacity="0.55"/>
+    <path d="M170,170 L276.07,63.93 A150,150 0 0,1 320,170 Z" fill="#2A1832"/>
+    <path d="M170,170 L320,170 A150,150 0 0,1 276.07,276.07 Z" fill="#7A2331" opacity="0.55"/>
+    <path d="M170,170 L276.07,276.07 A150,150 0 0,1 170,320 Z" fill="#2A1832"/>
+    <path d="M170,170 L170,320 A150,150 0 0,1 63.93,276.07 Z" fill="#7A2331" opacity="0.55"/>
+    <path d="M170,170 L63.93,276.07 A150,150 0 0,1 20,170 Z" fill="#2A1832"/>
+    <path d="M170,170 L20,170 A150,150 0 0,1 63.93,63.93 Z" fill="#7A2331" opacity="0.55"/>
+    <path d="M170,170 L63.93,63.93 A150,150 0 0,1 170,20 Z" fill="#2A1832"/>
+
+    <g stroke="#C9A227" stroke-width="1.5" opacity="0.85">
+      <line x1="170" y1="170" x2="170" y2="20"/>
+      <line x1="170" y1="170" x2="276.07" y2="63.93"/>
+      <line x1="170" y1="170" x2="320" y2="170"/>
+      <line x1="170" y1="170" x2="276.07" y2="276.07"/>
+      <line x1="170" y1="170" x2="170" y2="320"/>
+      <line x1="170" y1="170" x2="63.93" y2="276.07"/>
+      <line x1="170" y1="170" x2="20" y2="170"/>
+      <line x1="170" y1="170" x2="63.93" y2="63.93"/>
+    </g>
+
+    <circle cx="170" cy="170" r="26" fill="#120A18" stroke="#E6C55C" stroke-width="2.5"/>
+    <text x="170" y="177" text-anchor="middle" font-family="Cinzel Decorative, serif" font-size="14" fill="#E6C55C">WoM</text>
+  </g>
+  <path d="M170 4 L182 26 L158 26 Z" fill="#E6C55C"/>
+</svg>
   </div>
 </div>
 
