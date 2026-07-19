@@ -555,6 +555,116 @@
     navToggle.setAttribute('aria-expanded', 'false');
   }));
 </script>
+<script>
+  (function(){
+    const wrap = document.querySelector('.wheel-wrap');
+    const svg = document.querySelector('.wheel-svg');
+    const wheel = document.getElementById('wheelSpin');
 
+    let isDragging = false;
+    let currentRotation = 0;
+    let lastAngle = 0;
+    let velocity = 0;      // deg per ms
+    let lastTime = 0;
+    let momentumFrame = null;
+
+    function centerOf(el){
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+    function angleFromCenter(x, y){
+      const c = centerOf(svg);
+      return Math.atan2(y - c.y, x - c.x) * 180 / Math.PI;
+    }
+    function currentAngleDeg(){
+      const t = getComputedStyle(wheel).transform;
+      if(t === 'none') return 0;
+      const m = t.match(/matrix\(([^)]+)\)/);
+      if(!m) return 0;
+      const [a, b] = m[1].split(',').map(Number);
+      return Math.atan2(b, a) * 180 / Math.PI;
+    }
+
+    function startDrag(e){
+      cancelMomentum();
+      isDragging = true;
+      wrap.classList.add('dragging');
+      wheel.style.animation = 'none';
+      currentRotation = currentAngleDeg();
+      const p = e.touches ? e.touches[0] : e;
+      lastAngle = angleFromCenter(p.clientX, p.clientY);
+      lastTime = performance.now();
+      velocity = 0;
+      e.preventDefault();
+    }
+
+    function duringDrag(e){
+      if(!isDragging) return;
+      const p = e.touches ? e.touches[0] : e;
+      const angle = angleFromCenter(p.clientX, p.clientY);
+      let delta = angle - lastAngle;
+      if(delta > 180) delta -= 360;
+      if(delta < -180) delta += 360;
+
+      currentRotation += delta;
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      const now = performance.now();
+      const dt = now - lastTime;
+      if(dt > 0) velocity = delta / dt;
+      lastAngle = angle;
+      lastTime = now;
+      e.preventDefault();
+    }
+
+    function endDrag(){
+      if(!isDragging) return;
+      isDragging = false;
+      wrap.classList.remove('dragging');
+      applyMomentum();
+    }
+
+    function applyMomentum(){
+      let v = velocity;
+      function step(){
+        v *= 0.95; // friction
+        currentRotation += v * 16;
+        wheel.style.transform = `rotate(${currentRotation}deg)`;
+        if(Math.abs(v) > 0.006){
+          momentumFrame = requestAnimationFrame(step);
+        } else {
+          resumeIdleSpin();
+        }
+      }
+      if(Math.abs(v) > 0.006){
+        momentumFrame = requestAnimationFrame(step);
+      } else {
+        resumeIdleSpin();
+      }
+    }
+
+    function cancelMomentum(){
+      if(momentumFrame){
+        cancelAnimationFrame(momentumFrame);
+        momentumFrame = null;
+      }
+    }
+
+    function resumeIdleSpin(){
+      const normalized = ((currentRotation % 360) + 360) % 360;
+      const delay = -(normalized / 360 * 90); // match idle-spin's 90s cycle
+      wheel.style.transform = '';
+      wheel.style.animation = 'idle-spin 90s linear infinite';
+      wheel.style.animationDelay = `${delay}s`;
+    }
+
+    wrap.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', duringDrag);
+    window.addEventListener('mouseup', endDrag);
+    wrap.addEventListener('touchstart', startDrag, { passive:false });
+    window.addEventListener('touchmove', duringDrag, { passive:false });
+    window.addEventListener('touchend', endDrag);
+  })();
+</script>
 </body>
 </html>
