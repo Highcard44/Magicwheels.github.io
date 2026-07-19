@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wheels of Misfortune — A Commander Format</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cinzel+Decorative:wght@700;900&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-deep:#120A18;
+    --ink:#1B1023;
+    --ink-soft:#2A1832;
+    --gold:#C9A227;
+    --gold-bright:#E6C55C;
+    --blood:#7A2331;
+    --blood-bright:#A6394A;
+    --parchment:#F1E6CE;
+    --parchment-dim:#E4D6B8;
+    --text-light:#EDE3D9;
+    --text-faint:#B8A8C4;
+    --rule:rgba(201,162,39,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text-light);
+    font-family:'Spectral', serif;
+    font-size:17px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  a{color:inherit;}
+  h1,h2,h3{font-family:'Cinzel', serif; letter-spacing:0.02em; margin:0;}
+
+  .eyebrow{
+    font-family:'Cinzel', serif;
+    font-size:0.72rem;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:block;
+    margin-bottom:0.9rem;
+  }
+
+  /* ---------- background texture ---------- */
+  .stars-bg{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(1px 1px at 20% 30%, rgba(230,197,92,0.35), transparent),
+      radial-gradient(1px 1px at 70% 15%, rgba(230,197,92,0.25), transparent),
+      radial-gradient(1px 1px at 85% 60%, rgba(230,197,92,0.3), transparent),
+      radial-gradient(1px 1px at 40% 75%, rgba(230,197,92,0.2), transparent),
+      radial-gradient(1px 1px at 55% 40%, rgba(230,197,92,0.25), transparent),
+      radial-gradient(1px 1px at 10% 85%, rgba(230,197,92,0.2), transparent),
+      radial-gradient(1px 1px at 92% 88%, rgba(230,197,92,0.3), transparent),
+      var(--ink);
+  }
+
+  /* ---------- header / nav ---------- */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,10,24,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-inner{
+    max-width:1100px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1rem 1.5rem;
+  }
+  .brand{
+    font-family:'Cinzel Decorative', serif;
+    font-size:1.05rem;
+    color:var(--gold-bright);
+    text-decoration:none;
+  }
+  .nav-links{display:flex; gap:1.8rem; list-style:none; margin:0; padding:0;}
+  .nav-links a{
+    text-decoration:none;
+    font-family:'Cinzel', serif;
+    font-size:0.78rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    transition:color 0.25s ease;
+  }
+  .nav-links a:hover{color:var(--gold-bright);}
+  .nav-toggle{display:none;}
+
+  @media (max-width:640px){
+    .nav-links{
+      position:fixed; top:60px; right:0; left:0;
+      flex-direction:column; gap:0;
+      background:var(--ink-deep);
+      border-bottom:1px solid var(--rule);
+      max-height:0; overflow:hidden;
+      transition:max-height 0.3s ease;
+    }
+    .nav-links.open{max-height:300px;}
+    .nav-links a{display:block; padding:0.9rem 1.5rem; border-top:1px solid var(--rule);}
+    .nav-toggle{
+      display:block; background:none; border:1px solid var(--gold);
+      color:var(--gold-bright); font-family:'Cinzel',serif; font-size:0.7rem;
+      letter-spacing:0.1em; padding:0.4rem 0.7rem; border-radius:2px; cursor:pointer;
+    }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    max-width:1100px; margin:0 auto;
+    padding:4.5rem 1.5rem 3rem;
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:3rem;
+    align-items:center;
+  }
+  @media (max-width:860px){
+    .hero{grid-template-columns:1fr; padding-top:3rem;}
+  }
+
+  .hero h1{
+    font-size:clamp(2.4rem, 5vw, 3.6rem);
+    color:var(--parchment);
+    line-height:1.08;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--gold-bright);
+    display:block;
+    font-family:'Cinzel Decorative', serif;
+    font-size:0.55em;
+    letter-spacing:0.06em;
+    margin-top:0.6rem;
+  }
+
+  .hero-copy{margin-top:1.6rem; color:var(--text-light);}
+  .hero-copy p{margin:0 0 1.1rem;}
+  .hero-copy p:last-child{margin-bottom:0;}
+
+  .hero-ctas{display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;}
+  .btn{
+    display:inline-block;
+    font-family:'Cinzel', serif;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    text-decoration:none;
+    padding:0.85rem 1.6rem;
+    border-radius:2px;
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-gold{
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:var(--ink-deep);
+    box-shadow:0 4px 18px rgba(201,162,39,0.25);
+  }
+  .btn-ghost{
+    border:1px solid var(--gold);
+    color:var(--gold-bright);
+  }
+  .btn:hover{transform:translateY(-2px);}
+
+  /* ---------- signature wheel graphic ---------- */
+  .wheel-wrap{
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .wheel-svg{
+    width:100%; max-width:340px; height:auto;
+    filter:drop-shadow(0 10px 30px rgba(0,0,0,0.55));
+  }
+  .wheel-spin{
+    transform-origin:170px 170px;
+    animation:idle-spin 90s linear infinite;
+  }
+  .wheel-wrap:hover .wheel-spin{
+    animation-play-state:paused;
+    transition:transform 1.4s cubic-bezier(0.2,0.7,0.2,1);
+  }
+  @keyframes idle-spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+
+  /* ---------- section shell ---------- */
+  section{max-width:1100px; margin:0 auto; padding:5rem 1.5rem;}
+  .section-head{max-width:640px; margin-bottom:3rem;}
+  .section-head h2{font-size:clamp(1.7rem, 3vw, 2.3rem); color:var(--parchment);}
+  .section-head p{color:var(--text-faint); margin-top:0.9rem;}
+
+  .divider{
+    border:none; height:1px;
+    background:linear-gradient(90deg, transparent, var(--rule), transparent);
+    margin:0;
+  }
+
+  /* ---------- rule cards (tarot spread) ---------- */
+  .spread{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1.4rem;
+  }
+  @media (max-width:920px){ .spread{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .spread{grid-template-columns:1fr;} }
+
+  .card{
+    background:linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dim) 100%);
+    color:#241729;
+    border-radius:6px;
+    padding:1.7rem 1.4rem 1.9rem;
+    position:relative;
+    border:1px solid rgba(36,23,41,0.15);
+    box-shadow:0 12px 28px rgba(0,0,0,0.35);
+    transition:transform 0.3s ease;
+  }
+  .card:hover{transform:translateY(-6px);}
+  .card::before{
+    content:"";
+    position:absolute; inset:8px;
+    border:1px solid rgba(122,35,49,0.35);
+    border-radius:3px;
+    pointer-events:none;
+  }
+  .card .num{
+    font-family:'Cinzel Decorative', serif;
+    font-size:0.75rem;
+    color:var(--blood);
+    letter-spacing:0.18em;
+    display:block;
+    margin-bottom:0.7rem;
+  }
+  .card h3{
+    font-size:1.1rem;
+    color:#241729;
+    margin-bottom:0.7rem;
+    line-height:1.3;
+  }
+  .card p{
+    font-size:0.94rem;
+    margin:0;
+    color:#3a2a41;
+  }
+  .card p + p{margin-top:0.6rem;}
+
+  /* ---------- wheel embed section ---------- */
+  .wheel-embeds{display:flex; flex-direction:column; gap:2.2rem;}
+  .great-wheel-row{width:100%;}
+  .great-wheel-row .embed-frame{max-width:520px; margin:0 auto; display:block;}
+  .subwheels-label{
+    font-family:'Cinzel', serif;
+    font-size:0.78rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    display:flex; align-items:center; gap:0.9rem;
+    margin-bottom:0.2rem;
+  }
+  .subwheels-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--rule);
+  }
+  .subwheels-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1.8rem;
+  }
+  @media (max-width:860px){ .subwheels-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .subwheels-grid{grid-template-columns:1fr;} }
+  .embed-slot{
+    background:var(--ink-soft);
+    border:1px solid var(--rule);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .embed-slot .embed-label{
+    padding:1rem 1.2rem 0.8rem;
+    border-bottom:1px solid var(--rule);
+  }
+  .embed-slot .embed-label h3{font-size:1rem; color:var(--parchment);}
+  .embed-slot .embed-label span{
+    font-size:0.82rem; color:var(--text-faint); display:block; margin-top:0.3rem;
+  }
+  .embed-frame{
+    width:100%;
+    aspect-ratio:1/1.05;
+    border:0;
+    display:block;
+    background:var(--ink-deep);
+  }
+  .embed-fallback{
+    padding:1.1rem 1.2rem;
+    font-size:0.86rem;
+    color:var(--text-faint);
+  }
+  .embed-fallback a{color:var(--gold-bright); text-decoration:underline; text-decoration-color:var(--rule);}
+
+  /* ---------- links section ---------- */
+  .link-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:1.2rem;
+  }
+  .link-card{
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    background:var(--ink-soft);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    padding:1.2rem 1.4rem;
+    text-decoration:none;
+    color:var(--text-light);
+    transition:border-color 0.25s ease, transform 0.25s ease;
+  }
+  .link-card:hover{border-color:var(--gold); transform:translateX(4px);}
+  .link-card .lc-title{font-family:'Cinzel', serif; font-size:0.92rem; letter-spacing:0.04em; color:var(--parchment);}
+  .link-card .lc-sub{font-size:0.82rem; color:var(--text-faint); margin-top:0.25rem;}
+  .link-card .lc-arrow{color:var(--gold-bright); font-size:1.2rem; flex-shrink:0;}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--rule);
+    padding:2.5rem 1.5rem;
+    text-align:center;
+    color:var(--text-faint);
+    font-size:0.82rem;
+  }
+  footer .brand{display:block; margin-bottom:0.5rem; font-size:1rem;}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--gold-bright);
+    outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars-bg"></div>
+
+<header class="top">
+  <div class="nav-inner">
+    <a class="brand" href="#top">Wheels of Misfortune</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#rules">The Rules</a></li>
+      <li><a href="#wheels">Spin the Wheel</a></li>
+      <li><a href="#links">Resources</a></li>
+    </ul>
+  </div>
+</header>
+
+<div id="top" class="hero">
+  <div>
+    <span class="eyebrow">A Commander Format</span>
+    <h1>Your deck isn't fully<br>yours to build.<em>Wheels of Misfortune</em></h1>
+    <div class="hero-copy">
+      <p>Every Commander pod plays the same ninety-nine-card song eventually. Wheels of Misfortune breaks the tune before it starts: before a single card hits the table, a wheel is spun, and its verdict rewrites what your deck is allowed to be. A singleton restriction might vanish. A build-around might suddenly be mandatory. You don't find out which until the wheel stops.</p>
+      <p>Built on the standard Commander Bracket 3 ruleset, the format keeps everything you already know about power level and etiquette, then layers on a live tournament structure, a wheel-driven deckbuilding twist, and a second chance for the first players knocked out. It rewards adaptability over optimization — the pilot who can pivot beats the pilot with the better spreadsheet.</p>
+    </div>
+    <div class="hero-ctas">
+      <a class="btn btn-gold" href="#rules">Read the Rules</a>
+      <a class="btn btn-ghost" href="#wheels">Spin a Wheel</a>
+    </div>
+  </div>
+
+  <div class="wheel-wrap">
+    <svg class="wheel-svg" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="170" cy="170" r="164" fill="none" stroke="#C9A227" stroke-width="2" opacity="0.5"/>
+      <g class="wheel-spin">
+        <circle cx="170" cy="170" r="150" fill="#241729" stroke="#C9A227" stroke-width="3"/>
+        <g stroke="#C9A227" stroke-width="1.5" opacity="0.85">
+          <line x1="170" y1="20" x2="170" y2="320"/>
+          <line x1="20" y1="170" x2="320" y2="170"/>
+          <line x1="61" y1="61" x2="279" y2="279"/>
+          <line x1="279" y1="61" x2="61" y2="279"/>
+          <line x1="170" y1="20" x2="279" y2="279"/>
+          <line x1="170" y1="20" x2="61" y2="279"/>
+          <line x1="20" y1="170" x2="279" y2="61"/>
+          <line x1="20" y1="170" x2="279" y2="279"/>
+        </g>
+        <path d="M170 20 A150 150 0 0 1 279 61 L170 170 Z" fill="#7A2331" opacity="0.55"/>
+        <path d="M279 279 A150 150 0 0 1 170 320 L170 170 Z" fill="#7A2331" opacity="0.55"/>
+        <path d="M61 279 A150 150 0 0 1 20 170 L170 170 Z" fill="#7A2331" opacity="0.35"/>
+        <circle cx="170" cy="170" r="26" fill="#120A18" stroke="#E6C55C" stroke-width="2.5"/>
+        <text x="170" y="177" text-anchor="middle" font-family="Cinzel Decorative, serif" font-size="14" fill="#E6C55C">WoM</text>
+      </g>
+      <path d="M170 4 L182 26 L158 26 Z" fill="#E6C55C"/>
+    </svg>
+  </div>
+</div>
+
+<hr class="divider">
+
+<section id="rules">
+  <div class="section-head">
+    <span class="eyebrow">How It Works</span>
+    <h2>Four cards, drawn in order</h2>
+    <p>The format unfolds the same way every event: the wheel is spun, decks are built around its verdict, games are played, and the fallen get one more turn at the drafting table before the next round.</p>
+  </div>
+
+  <div class="spread">
+    <div class="card">
+      <span class="num">I</span>
+      <h3>The Foundation</h3>
+      <p>Four players per pod. Each deck runs ninety-nine cards plus one commander, built to the standard Commander Bracket 3 ruleset.</p>
+      <p>Everything you already know about power level, banned cards, and etiquette carries over unchanged — the wheel only adds to it.</p>
+    </div>
+    <div class="card">
+      <span class="num">II</span>
+      <h3>The Great Wheel</h3>
+      <p>Before a single deck is built — before the first round of the event — The Great Wheel is spun once. Its result is a specific, named exception to the Bracket 3 ruleset, and it holds for the entire event.</p>
+      <p>An exception might restrict a choice you'd normally have, or unlock one you wouldn't — such as lifting the singleton restriction entirely.</p>
+      <p>Some results point to a subwheel instead of a fixed effect — "all cards gain a random keyword ability" sends you to the Keyword Wheel. When and how often you spin a subwheel is left open-ended on purpose, so it becomes a live table decision each time it comes up.</p>
+    </div>
+    <div class="card">
+      <span class="num">III</span>
+      <h3>The Match</h3>
+      <p>Wheels of Misfortune is played as a tournament, not a single sit-down. The first player to win two games takes the full event.</p>
+      <p>Every game means a fresh spin — so a match can turn on wildly different deckbuilding conditions from one game to the next.</p>
+    </div>
+    <div class="card">
+      <span class="num">IV</span>
+      <h3>Second Chances</h3>
+      <p>The first two players eliminated in each game aren't done for the match. Between rounds, they're given time to revise their decklists.</p>
+      <p>Getting knocked out early isn't just a setback — it's a chance to rebuild sharper for the next spin.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="wheels">
+  <div class="section-head">
+    <span class="eyebrow">Before You Build</span>
+    <h2>Spin the wheel</h2>
+    <p>The Great Wheel is spun once, before the event and before any deck is built. Subwheels come up when a Great Wheel result calls for one — spin those whenever the table decides.</p>
+  </div>
+
+  <div class="wheel-embeds">
+    <div class="great-wheel-row">
+      <div class="embed-slot">
+        <div class="embed-label">
+          <h3>The Great Wheel</h3>
+          <span>One spin, before the event begins. Sets the exception for every game that follows.</span>
+        </div>
+        <iframe class="embed-frame" src="https://pickerwheel.com/emb/?choices=Choose%202%20Emblems%20(On%20Field),Cumulative%20Upkeep%20add%2010%20colored%20mana%20(of%20color%20outside%20color%20identity),Pick%20your%20starting%20hand,Anti-Commander,Mill%2080,1%20Banned%20Card%20in%20hand,Copy%20a%20card%20type%20of%20your%20choice,Every%20Gamechanger,Random%20Mono%20Creature%20Type,Random%204%20Emblems%20(On%20Field),2%20Turns%20in%20a%20row,30%20Pithing%20Needles%20+%20Telepathys%20(Needles%20in%20Deck,%20Telepathy%20on%20Field),2%20Lanterns%20of%20Insight%20+%2010%20Codex%20Shredders%20(On%20Field),Jin-Gitaxias%20Core%20Augurs%20(On%20Field),All%20cards%20gain%20a%20random%20keyword%20ability,5%20Moroii%20(On%20Field),Round%20Table%20Chalice%20of%20the%20Void%20(On%20Field,%20X%20=%20Player%20Order),Delete%20all%20cards%20of%20a%20type%20from%20your%20deck%20(determined%20each%20game),Commander%20Deck%20Random%20Drawing,10%20Life,Signature%20Spell,All%20cards%20unbanned,Octupleton%20Restriction&title=The%20Great%20Wheel&mute=false" width="100%" height="550px" title="The Great Wheel" scrolling="no" frameborder="0" loading="lazy"></iframe>
+        <p class="embed-fallback">Wheel not loading? <a href="https://pickerwheel.com/?id=cxctu" target="_blank" rel="noopener">Open The Great Wheel on PickerWheel →</a></p>
+      </div>
+    </div>
+
+    <span class="subwheels-label">Subwheels</span>
+    <div class="subwheels-grid">
+      <div class="embed-slot">
+        <div class="embed-label">
+          <h3>Card Types Wheel</h3>
+          <span>Subwheel for results that key off a specific card type. Spin whenever the table calls for it.</span>
+        </div>
+        <iframe class="embed-frame" src="https://pickerwheel.com/emb/?choices=Artifact,Creature,Enchantment,Instant,Nonbasic%20Land,Sorcery,Planeswalker%20+%20Spin%20Again,Battle%20+%20Spin%20Again&title=Card%20Types&mute=false" width="100%" height="550px" title="Card Types Wheel" scrolling="no" frameborder="0" loading="lazy"></iframe>
+        <p class="embed-fallback">Wheel not loading? <a href="https://pickerwheel.com/?id=zvN7m" target="_blank" rel="noopener">Open Card Types Wheel on PickerWheel →</a></p>
+      </div>
+
+      <div class="embed-slot">
+        <div class="embed-label">
+          <h3>Keyword Abilities Wheel</h3>
+          <span>Subwheel for the "All cards gain a random keyword ability" result. Spin whenever the table calls for it.</span>
+        </div>
+        <iframe class="embed-frame" src="https://pickerwheel.com/emb/?choices=Deathtouch,Defender,Double%20Strike,Enchant,Equip,First%20Strike,Flash,Flying,Haste,Hexproof,Indestructible,Intimidate,Landwalk,Lifelink,Protection,Reach,Shroud,Trample,Vigilance,Ward,Banding,Rampage,Cumulative%20Upkeep,Flanking,Phasing,Buyback,Shadow,Cycling,Echo,Horsemanship,Fading,Kicker,Flashback,Madness,Fear,Morph,Amplify,Provoke,Storm,Affinity,Entwine,Modular,Sunburst,Bushido,Soulshift,Splice,Offering,Ninjutsu,Epic,Convoke,Dredge,Transmute,Bloodthirst,Haunt,Replicate,Forecast,Graft,Recover,Ripple,Split%20Second,Suspend,Vanishing,Absorb,Aura%20Swap,Delve,Fortify,Frenzy,Gravestorm,Poisonous,Transfigure,Champion,Changeling,Evoke,Hideaway,Prowl,Reinforce,Conspire,Persist,Wither,Retrace,Devour,Exalted,Unearth,Cascade,Annihilator,Level%20Up,Rebound,Umbra%20Armor,Infect,Battle%20Cry,Living%20Weapon,Undying,Miracle,Soulbond,Overload,Scavenge,Unleash,Cipher,Evolve,Extort,Fuse,Bestow,Tribute,Dethrone,Hidden%20Agenda,Outlast,Prowess,Dash,Exploit,Menace,Renown,Awaken,Devoid,Ingest,Myriad,Surge,Skulk,Emerge,Escalate,Melee,Crew,Fabricate,Partner,Undaunted,Improvise,Aftermath,Embalm,Eternalize,Afflict,Ascend,Assist,Jump-Start,Mentor,Afterlife,Riot,Spectacle,Escape,Companion,Mutate,Encore,Boast,Foretell,Demonstrate,Daybound%20and%20Nightbound,Disturb,Decayed,Cleave,Training,Compleated,Reconfigure,Blitz,Casualty,Enlist,Read%20Ahead,Ravenous,Squad,Space%20Sculptor,Visit,Prototype,Living%20Metal,More%20Than%20Meets%20the%20Eye,For%20Mirrodin!,Toxic,Backup,Bargain,Craft,Disguise,Solved,Plot,Saddle,Spree,Freerunning,Gift,Offspring,Impending,Exhaust,Max%20Speed,Start%20Your%20Engines!,Harmonize,Mobilize,Job%20Select,Tiered,Station,Warp,∞%20(Infinity),Mayhem,Web-slinging,Firebending&title=Keyword%20Abilities&mute=false" width="100%" height="550px" title="Keyword Abilities Wheel" scrolling="no" frameborder="0" loading="lazy"></iframe>
+        <p class="embed-fallback">Wheel not loading? <a href="https://pickerwheel.com/?id=65CfN" target="_blank" rel="noopener">Open Keyword Abilities Wheel on PickerWheel →</a></p>
+      </div>
+
+      <div class="embed-slot">
+        <div class="embed-label">
+          <h3>Creature Types Wheel</h3>
+          <span>Subwheel for the Random Mono Creature Type result. Spin whenever the table calls for it.</span>
+        </div>
+        <iframe class="embed-frame" src="https://pickerwheel.com/emb/?choices=Advisor,Aetherborn,Alien,Ally,Angel,Antelope,Ape,Archer,Archon,Armadillo,Army,Artificer,Assassin,Assembly-Worker,Astartes,Atog,Aurochs,Avatar,Azra,Badger,Balloon,Barbarian,Bard,Basilisk,Bat,Bear,Beast,Beaver,Beeble,Beholder,Berserker,Bird,Bison,Blinkmoth,Boar,Bringer,Brushwagg,Camarid,Camel,Capybara,Caribou,Carrier,Cat,Centaur,Child,Chimera,Citizen,Cleric,Clown,Cockatrice,Construct,Coward,Coyote,Crab,Crocodile,C’tan,Custodes,Cyberman,Cyclops,Dalek,Dauthi,Demigod,Demon,Deserter,Detective,Devil,Dinosaur,Djinn,Doctor,Dog,Dragon,Drake,Dreadnought,Drix,Drone,Druid,Dryad,Dwarf,Echidna,Efreet,Egg,Elder,Eldrazi,Elemental,Elephant,Elf,Elk,Employee,Eye,Faerie,Ferret,Fish,Flagbearer,Fox,Fractal,Frog,Fungus,Gamer,Gargoyle,Germ,Giant,Gith,Glimmer,Gnoll,Gnome,Goat,Goblin,God,Golem,Gorgon,Graveborn,Gremlin,Griffin,Guest,Hag,Halfling,Hamster,Harpy,Hedgehog,Hellion,Hero,Hippo,Hippogriff,Homarid,Homunculus,Horror,Horse,Human,Hydra,Hyena,Illusion,Imp,Incarnation,Inkling,Inquisitor,Insect,Jackal,Jellyfish,Juggernaut,Kangaroo,Kavu,Kirin,Kithkin,Knight,Kobold,Kor,Kraken,Llama,Lamia,Lammasu,Leech,Lemur,Leviathan,Lhurgoyf,Licid,Lizard,Lobster,Manticore,Masticore,Mercenary,Merfolk,Metathran,Minion,Minotaur,Mite,Mole,Monger,Mongoose,Monk,Monkey,Moogle,Moonfolk,Mount,Mouse,Mutant,Myr,Mystic,Nautilus,Necron,Nephilim,Nightmare,Nightstalker,Ninja,Noble,Noggle,Nomad,Nymph,Octopus,Ogre,Ooze,Orb,Orc,Orgg,Otter,Ouphe,Ox,Oyster,Pangolin,Peasant,Pegasus,Pentavite,Performer,Pest,Phelddagrif,Phoenix,Phyrexian,Pilot,Pincher,Pirate,Plant,Platypus,Porcupine,Possum,Praetor,Primarch,Prism,Processor,Qu,Rabbit,Raccoon,Ranger,Rat,Rebel,Reflection,Rhino,Rigger,Robot,Rogue,Sable,Salamander,Samurai,Sand,Saproling,Satyr,Scarecrow,Scientist,Scion,Scorpion,Scout,Sculpture,Seal,Serf,Serpent,Servo,Shade,Shaman,Shapeshifter,Shark,Sheep,Siren,Skeleton,Skunk,Slith,Sliver,Sloth,Slug,Snail,Snake,Soldier,Soltari,Spawn,Specter,Spellshaper,Sphinx,Spider,Spike,Spirit,Splinter,Sponge,Squid,Squirrel,Starfish,Surrakar,Survivor,Symbiote,Synth,Tentacle,Tetravite,Thalakos,Thopter,Thrull,Tiefling,Toy,Treefolk,Trilobite,Triskelavite,Troll,Turtle,Tyranid,Unicorn,Vampire,Varmint,Vedalken,Villain,Volver,Wall,Walrus,Warlock,Warrior,Weasel,Weird,Werewolf,Whale,Wizard,Wolf,Wolverine,Wombat,Worm,Wraith,Wurm,Yeti,Zombie,Zubera&title=Creature%20Types&mute=false" width="100%" height="550px" title="Creature Types Wheel" scrolling="no" frameborder="0" loading="lazy"></iframe>
+        <p class="embed-fallback">Wheel not loading? <a href="https://pickerwheel.com/?id=HMisY" target="_blank" rel="noopener">Open Creature Types Wheel on PickerWheel →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="links">
+  <div class="section-head">
+    <span class="eyebrow">Resources</span>
+    <h2>Everything else you need</h2>
+    <p>Deckbuilding tools, community, and reference material for the format.</p>
+  </div>
+
+  <div class="link-grid">
+    <!-- TODO: swap these placeholder hrefs for your real links -->
+    <a class="link-card" href="#" target="_blank" rel="noopener">
+      <div>
+        <div class="lc-title">Commander Bracket Guidelines</div>
+        <div class="lc-sub">The base ruleset this format builds on</div>
+      </div>
+      <span class="lc-arrow">↗</span>
+    </a>
+    <a class="link-card" href="#" target="_blank" rel="noopener">
+      <div>
+        <div class="lc-title">Deckbuilder</div>
+        <div class="lc-sub">Build and share decklists</div>
+      </div>
+      <span class="lc-arrow">↗</span>
+    </a>
+    <a class="link-card" href="#" target="_blank" rel="noopener">
+      <div>
+        <div class="lc-title">Discord</div>
+        <div class="lc-sub">Find a pod, discuss wheel results</div>
+      </div>
+      <span class="lc-arrow">↗</span>
+    </a>
+    <a class="link-card" href="#" target="_blank" rel="noopener">
+      <div>
+        <div class="lc-title">All Wheels on PickerWheel</div>
+        <div class="lc-sub">The full collection, off-site</div>
+      </div>
+      <span class="lc-arrow">↗</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span class="brand" style="font-family:'Cinzel Decorative', serif; color:var(--gold-bright);">Wheels of Misfortune</span>
+  A Commander format. Fortune favors the flexible.
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }));
+</script>
+
+</body>
+</html>
