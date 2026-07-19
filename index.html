@@ -180,18 +180,22 @@
     width:100%; max-width:340px; height:auto;
     filter:drop-shadow(0 10px 30px rgba(0,0,0,0.55));
   }
-  .wheel-spin{
-    transform-origin:170px 170px;
-    animation:idle-spin 90s linear infinite;
-  }
-  .wheel-wrap:hover .wheel-spin{
-    animation-play-state:paused;
-    transition:transform 1.4s cubic-bezier(0.2,0.7,0.2,1);
-  }
-  @keyframes idle-spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
-  }
+ .wheel-spin{
+  transform-origin:170px 170px;
+  animation:idle-spin 90s linear infinite;
+}
+@keyframes idle-spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+.wheel-wrap{
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+}
+.wheel-wrap.dragging{
+  cursor:grabbing;
+}
 
   /* ---------- section shell ---------- */
   section{max-width:1100px; margin:0 auto; padding:5rem 1.5rem;}
